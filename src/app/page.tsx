@@ -1,4 +1,4 @@
-import Cta from "@/components/cta/cta";
+import Nav from "@/components/nav/nav";
 import dynamic from "next/dynamic";
 
 const Hero = dynamic(() => import("../components/hero/hero"), {
@@ -8,6 +8,7 @@ const Hero = dynamic(() => import("../components/hero/hero"), {
 export default function Home() {
   return (
     <>
+    <Nav />
     <Hero />
     </>
   )

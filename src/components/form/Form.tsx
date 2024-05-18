@@ -1,5 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { ArrowsRightLeftIcon } from '@heroicons/react/24/solid';
+import axios from 'axios';
+import { useRouter } from 'next/navigation'
 
 interface Destination {
   _id: string;
@@ -9,23 +11,17 @@ interface Destination {
   City: string;
 }
 
-const getDestinations = async() => {
-  try {
-    const res = await fetch('http://localhost:3000/api/destination', { cache: 'no-store' });
-
-    if (!res.ok) {
-      throw new Error('Failed to fetch destinations');
-    }
-    return res.json();
-  } catch (error) {
-    console.error('Error loading destinations', error);
-  }
-};
-
 const Form = async() => {
-
   
-  const [destinations, setDestinations] = useState<Destination[]>([]);
+  const router = useRouter();
+  const [destinations, setDestinations] = React.useState<Destination[]>([]);
+
+  const [flight, setFlight] = React.useState({
+    type: "one-way",
+    from: "",
+    to: "",
+    date: "",
+  });
 
   useEffect(() => {
     const fetchDestinations = async () => {
@@ -48,7 +44,46 @@ const Form = async() => {
   }, []);
 
 
+  
+  const getDestinations = async() => {
+    try {
+      const res = await fetch('/api/destination', { cache: 'no-store' });
+  
+      if (!res.ok) {
+        throw new Error('Failed to fetch destinations');
+      }
+      return res.json();
+    } catch (error) {
+      console.error('Error loading destinations', error);
+    }
+  };
 
+  const onSearch = async (e: any) => {
+    e.preventDefault();
+  
+    try {
+
+      console.log(flight);
+
+      if (flight.from === '' || flight.to === '' || flight.date === '') {
+        throw new Error('Please fill in all required fields');
+      }
+
+      if (flight.type === 'round-trip') {
+        
+        const url = '/search-flight/round-trip' + `?from=${flight.from}&to=${flight.to}&departureDate=${flight.date}`;
+        router.push(url);
+      }
+
+      if (flight.type === 'one-way') {
+        const url = '/search-flight/one-way' + `?from=${flight.from}&to=${flight.to}&departureDate=${flight.date}`;
+        router.push(url);
+      }
+      
+    } catch (err: any) {
+      console.log(err.message);
+    }
+  };
 
 
   return (
@@ -58,39 +93,67 @@ const Form = async() => {
 
           
             <div className="relative">
-              <div className='flex flex-wrap items-center gap-3'>
 
-                <select data-te-select-init data-te-select-placeholder="Select Origin" name='From' id='From' >
-                  {destinations.map((d:any) => (
-                  <option value={d.City}>
-                    {d.City}
+              <div className="flex text-center text-black justify-start">
+                <select name='type' id='type'  defaultValue='one-way'
+                onChange={(e) => setFlight({...flight, type: e.target.value})}
+                >
+                  <option value='' disabled>Select Trip Type</option>
+                  <option value='one-way' >
+                    One Way
                   </option>
-                   ))}
+                  <option value='round-trip'>
+                    Round Trip
+                  </option>
                 </select>
+              </div>
 
-                <button type="button" data-te-ripple-init data-te-ripple-color="light" className='outline outline-offset-4 outline-white rounded-full w-4 h-4 m-3'>
-                  <ArrowsRightLeftIcon className="h-4 w-4 text-white hover:text-gray-400" />
-                </button>
 
-                  <select data-te-select-init data-te-select-placeholder="Select Destination" name='To' id='To'>
+                  <div className='flex flex-wrap items-center gap-3'>
+
+                  <select className='w-[200px] p-2 border rounded-md ' name='from' id='from' 
+                  onChange={(e) => setFlight({...flight, from: e.target.value})}
+                  >
+                    <option value='' disabled>Select Destination</option>
                     {destinations.map((d:any) => (
                     <option value={d.City}>
                       {d.City}
                     </option>
                     ))}
                   </select>
-  
 
-                         
-                  <div className="relative" data-te-datepicker-init data-te-inline="true" data-te-input-wrapper-init> 
-                  <input type="text" className="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:peer-focus:text-primary [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0" 
-                  placeholder="Select a date" /> 
-                  <label htmlFor="floatingInput" className="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-white-200 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[0.9rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary">
-                    Select a date</label>
+                  <button type="button" data-te-ripple-init data-te-ripple-color="light" className='outline outline-offset-4 outline-white rounded-full w-4 h-4 m-3'>
+                    <ArrowsRightLeftIcon className="h-4 w-4 text-white hover:text-gray-400" />
+                  </button>
+
+                    <select data-te-select-init data-te-select-placeholder="Select Destination" name='to' id='to'
+                    onChange={(e) => setFlight({...flight, to: e.target.value})}
+                    >
+                      {destinations.map((d:any) => (
+                      <option value={d.City}>
+                        {d.City}
+                      </option>
+                      ))}
+                    </select>
+
+
+                          
+                    <div className="relative" data-te-datepicker-init data-te-inline="true" data-te-input-wrapper-init> 
+                    <label htmlFor="date" className="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-white-200 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[0.9rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary">
+                      Select a date</label>
+
+                    <input type="text" className="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:peer-focus:text-primary [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0" id="date" name="date"
+                    data-te-datepicker-input-init
+                    onChange={(e) => setFlight({...flight, date: e.target.value})}
+                    /> 
+                    </div>
+
+
+                  <button 
+                  onClick={onSearch}
+                  className="rounded-md border-2 p-3 text-white">Search Flight</button>
                   </div>
 
-                <button className="rounded-md border-2 p-3">Search Flight</button>
-              </div>
             </div>
           </form>
         </div>

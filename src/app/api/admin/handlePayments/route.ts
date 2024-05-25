@@ -1,6 +1,7 @@
 import mongodb from '@/lib/mongodb';
 import Payments from '@/models/payments';
 import { NextRequest, NextResponse } from "next/server";
+import BookFlight from '@/models/bookflights';
 
 export async function GET() {
     try {
@@ -53,10 +54,14 @@ export async function GET() {
     try {
         await mongodb();
         const reqBody = await request.json();
-        const { _id, status} = reqBody;
+        const { _id, status, bookingId} = reqBody;
 
         const updatedDTransaction = await Payments 
         .findByIdAndUpdate(_id, { status });
+
+        const updatedBooking = await BookFlight
+        .findByIdAndUpdate(bookingId, { paymentStatus: status});
+
         return NextResponse.json({ message: 'Transaction updated successfully' });
 
     } catch (error) {

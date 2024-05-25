@@ -107,7 +107,7 @@ const page = () => {
             <select className="w-[200px] mt-4 p-2 border border-gray-300 rounded-md" name="status" id="status"
             onChange={(e) => setPayment({...payment, status: e.target.value})} value={payment.status}
             >
-                <option value="forVerification">Pending</option>
+                <option value="pending">Pending</option>
                 <option value="paid">Paid</option>
                 <option value="failed">Failed</option>
             </select>

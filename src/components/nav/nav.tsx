@@ -35,6 +35,19 @@ const Nav = () => {
        
     }, []);
 
+    const logout = async () => {
+        try {
+            const res = await axios.get('/api/user/logout');
+            console.log(res.data);
+            if (res.data.success === true) {
+                setToken(null);
+            }
+            router.push('/');
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
 
 
     return (
@@ -51,7 +64,7 @@ const Nav = () => {
                         <ul className='hidden md:flex md:items-center md:gap-[4vw] gap-8'>
 
                             <li className='hover:text-gray-500'><Link href="/">Book</Link></li>
-                            <li className='hover:text-gray-500'><Link href="#">Manage</Link></li>
+                            <li className='hover:text-gray-500'><Link href="/track">Track Reservation</Link></li>
                             <li className='hover:text-gray-500'><Link href="#">Travel Info</Link></li>
                             <li className='hover:text-gray-500'><Link href="#">Explore</Link></li>
                             <li className='hover:text-gray-500'><Link href="#">About</Link></li>
@@ -66,9 +79,12 @@ const Nav = () => {
                         <button className='bg-[#92ad18] text-white px-5 py-2 rounded-full hover:bg-[#87acec]' onClick={() => {window.location.href = '/login'}}><Link href="/login">Log in</Link></button>
                         </div>
                     ) : (
+                        
                         <div className='hidden md:flex pr-4 items-center gap-6'>
-                            <button className="bg-[#92ad18] text-white w-[100%] px-5 py-2 rounded-full hover:bg-[#87acec]" onClick={() => {window.location.href = '/myaccount'}} ><Link href="/myaccount">My Account</Link></button>
+                            <button className="bg-[#92ad18] text-white  px-5 py-2 rounded-full hover:bg-[#87acec]" onClick={() => {window.location.href = '/myaccount'}} ><Link href="/myaccount">My Account</Link></button>
+                            <button className="bg-[#c25555] text-white  px-5 py-2 rounded-full hover:bg-[#87acec]" onClick={logout}>Log Out</button>
                         </div>
+                        
                     )}
 
 
@@ -80,7 +96,7 @@ const Nav = () => {
 
                 <ul className={!nav ? 'hidden md:hidden' : 'md:hidden mr-4 text-center absolute bg-zinc-200 w-full px-8 p-4 mx-auto space-y-4'}>
                     <li className='hover:text-gray-500 border-b-2 border-gray-300 w-full'><Link onClick={handleClose} href="/">Book</Link></li>
-                    <li className='hover:text-gray-500 border-b-2 border-gray-300 w-full'><Link onClick={handleClose} href="#">Manage</Link></li>
+                    <li className='hover:text-gray-500 border-b-2 border-gray-300 w-full'><Link onClick={handleClose} href="/track">Track Reservation</Link></li>
                     <li className='hover:text-gray-500 border-b-2 border-gray-300 w-full'><Link onClick={handleClose} href="#">Travel Info</Link></li>
                     <li className='hover:text-gray-500 border-b-2 border-gray-300 w-full'><Link onClick={handleClose} href="#">Explore</Link></li>
                     <li className='hover:text-gray-500 border-b-2 border-gray-300 w-full'><Link onClick={handleClose} href="#">About</Link></li>
@@ -92,6 +108,7 @@ const Nav = () => {
                     ) : (
                         <div className="flex flex-col my-4 items-center">
                             <button className="bg-[#92ad18] text-white w-[70%] px-5 py-2 rounded-full hover:bg-[#87acec]" onClick={() => {window.location.href = '/myaccount'}}><Link href="/myaccount">My Account</Link></button>
+                            <button className="bg-[#c25555] text-white w-[70%] px-5 py-2 rounded-full hover:bg-[#87acec]" onClick={logout}>Log Out</button>
                         </div>
                     )}
 

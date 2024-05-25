@@ -122,7 +122,9 @@ const page = () => {
                   {bookFlight.guestInfo.email}
                 </td>
                 <td className="border py-2 text-center whitespace-nowrap text-sm text-gray-900">
-                  {bookFlight.paymentStatus === 'pending' ? <span className="text-red-500">Pending</span> : <span className="text-green-500">Paid</span>}
+                    {bookFlight.paymentStatus === 'pending' ? <span className="text-red-500">Not Verified</span> : 
+                    bookFlight.paymentStatus === 'paid' ? <span className="text-green-500">Verified</span> : 
+                    bookFlight.paymentStatus === 'failed' ? <span className="text-red-500">Failed</span> : null}
                 </td>
                 <td className="border py-2 text-center whitespace-nowrap text-sm text-gray-900 ">
                   <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"

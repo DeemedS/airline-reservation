@@ -12,6 +12,7 @@ const page = () => {
 
     const { Canvas } = useQRCode();
     const [selectedFile, setSelectedFile] = useState(null);
+    const [loading, setLoading] = useState(false);
     const router = useRouter();
   
     const [flightData , setFlightData] = useState({
@@ -86,6 +87,8 @@ const page = () => {
       };
     
       const handleFileUpload = async () => {
+        setLoading(true);
+        
         if (!selectedFile) return;
     
         const formData = new FormData();
@@ -105,6 +108,8 @@ const page = () => {
           
         } catch (error) {
           console.error('Error uploading file:', error);
+        } finally {
+          setLoading(false);
         }
       };
 
@@ -187,7 +192,7 @@ const page = () => {
 
         <input
           type="file"
-          className="border border-black-300 rounded-lg p-2"
+          className="border border-black-300 rounded-lg p-2 m-2"
           onChange={handleFileChange}
         />
 

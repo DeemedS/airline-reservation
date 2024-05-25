@@ -1,22 +1,37 @@
+"use client";
+
 import React from 'react'
-import Link from "next/link"
 import Nav from '@/components/nav/nav'
+import { useRouter } from 'next/navigation'
+import axios from 'axios';
+import { set } from 'mongoose';
+
+const page = () => {
+
+  const [reservationID, setReservationID] = React.useState('')
+  const [message, setMessage] = React.useState('')
+  const router = useRouter()
 
 
-const MyAccount = () => {
+
   return (
-    <div>
+    <>
         <Nav />
-        
-        <div className="flex flex-col mx-[15%] list-none justify-center py-4 rounded-lg">
-        <div className="mt-[60px] lg:mt-[80px]">
-            <h1 className="text-2xl font-bold">My Account</h1>
-            
+
+        <div className="flex flex-col">
+        <div className="mt-[90px] lg:mt-[100px]">
+        </div>
+        </div>
+  
+
+        <div className="flex flex-col mx-[5%] md:mx-[10%] xl:mx-[25%] list-none p-5 rounded-lg bg-white mt-5 h-[650px]  text-center">
+          
+
 
         </div>
-        </div>
-    </div>
+
+    </>
   )
 }
 
-export default MyAccount
+export default page

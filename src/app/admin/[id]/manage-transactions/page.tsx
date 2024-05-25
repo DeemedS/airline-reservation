@@ -104,7 +104,7 @@ const page = () => {
                   {payment.amount}
                 </td>
                 <td className="border py-2 text-center whitespace-nowrap text-sm text-gray-900">
-                    {payment.status === 'forVerification' ? <span className="text-red-500">Not Verified</span> : 
+                    {payment.status === 'pending' ? <span className="text-red-500">Not Verified</span> : 
                     payment.status === 'paid' ? <span className="text-green-500">Verified</span> : 
                     payment.status === 'failed' ? <span className="text-red-500">Failed</span> : null}
                     

@@ -20,12 +20,9 @@ const { reference } = useParams();
         <div className="mt-[90px] lg:mt-[100px]">
         </div>
         </div>
-
-        <ProgressBar />   
-
         <div className="flex flex-col mx-[5%] md:mx-[10%] xl:mx-[25%] list-none p-5 rounded-lg bg-white mt-5 h-[650px]  text-center">
 
-            <p className="text-lg font-semibold  p-3">Reservation Confirmed</p>
+            <p className="text-lg font-semibold  p-3">Payment Confirmed</p>
 
             <hr className='my-2 border border-black-300'></hr>
 

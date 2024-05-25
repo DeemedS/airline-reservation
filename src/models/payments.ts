@@ -28,7 +28,7 @@ const PaymentsSchema = new Schema({
     },
     status: {
         type: String,
-        default: 'forVerification'
+        default: 'pending'
     },
     date: {
         type: Date,

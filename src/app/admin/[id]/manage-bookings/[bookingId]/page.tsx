@@ -32,7 +32,7 @@ interface BookingData {
 interface BookFlight {
   _id?: string;
   departureFlightId?: string;
-  returnFlghtId?: string;
+  returnFlightId?: string;
   seatCode?: string;
   guestInfo?: GuestInfo;
   bookingData?: BookingData;
@@ -83,11 +83,10 @@ const Page = () => {
             await axios.delete('/api/admin/handleBookFlights', {
                 data: { bookingId }
             });
-
-            
             window.alert('Destination deleted successfully');
+            router.push(`/admin/manage/manage-bookings`);
         }
-        router.push(`/admin/manage/manage-bookings`);
+        
     } catch (error) {
         console.log(error);
     } finally {
@@ -112,6 +111,8 @@ const Page = () => {
         <h1 className="text-2xl font-semibold">Manage Reservation: <span>{bookFlight?.bookingData?.referenceNumber}</span> </h1>
         <h2 className="text-l">Booked Date: <span>{formatDate(bookFlight?.bookedDate?.toString() ?? null)}</span></h2>
         <h2 className="text-l">Selected Package: <span>{bookFlight?.bookingData?.selectedPackage}</span></h2>
+        <h2 className="text-l">Payment Status: <span>{bookFlight?.paymentStatus}</span></h2>
+
         
         <div className="flex flex-row gap-4 mt-2">
             <div className="flex flex-col gap-4 w-[200px]">
@@ -125,22 +126,6 @@ const Page = () => {
                 />
             </div> 
         </div>
-
-        <div className="flex flex-row gap-4 mt-2">
-            <div className="flex flex-col gap-4 w-[200px]">
-                <label className="text-lg font-semibold">Payment Status</label>
-                <select id='paymentStatus' className="border-2 border-gray-300 rounded-lg p-2 "
-                onChange={(e) => setBookFlight({...bookFlight, paymentStatus: e.target.value})}
-                value={bookFlight?.paymentStatus || ''}
-                >
-                <option value='' disabled >Select Payment Status</option>
-                <option value='paid'>Paid</option>
-                <option value='pending'>Pending</option>
-                </select>
-            </div> 
-        </div>
-
-        
 
             <div className="flex flex-col list-none justify-center rounded-lg bg-white mt-5 p-10">
 

@@ -26,6 +26,7 @@ import {
     Modal,
     Ripple,
   } from "tw-elements";
+import { get } from "http";
   
 
 const Hero = () => {
@@ -42,6 +43,13 @@ const Hero = () => {
     departureDate: "",
     returnDate: "",
   });
+
+  const switchValues = () => {
+    const from = flight.from;
+    const to = flight.to;
+    setFlight({...flight, from: to, to: from});
+    getToDestination(to);
+  };
 
  
     useEffect(() => {
@@ -91,6 +99,7 @@ const Hero = () => {
       const getToDestination = (from: string) => {
         const toDestination = destinations.filter((d: any) => d.Abv !== from);
         setToDestination(toDestination);
+        return true;
       }
     
       const onSearch = async (e: any) => {
@@ -170,7 +179,7 @@ const Hero = () => {
                   onChange={(e) => {
                     setFlight({...flight, from: e.target.value});
                     getToDestination(e.target.value);
-                  }} defaultValue=''
+                  }} value={flight.from}
                   >
                     <option value='' disabled>Select Origin</option>
                     {destinations.map((d:any) => (
@@ -181,14 +190,15 @@ const Hero = () => {
                   </select>
                   </div>
 
-                  <button type="button" data-te-ripple-init data-te-ripple-color="light" className='outline outline-offset-4 outline-white rounded-full w-4 h-4 m-3'>
+                  <button type="button" data-te-ripple-init data-te-ripple-color="light" className='outline outline-offset-4 outline-white rounded-full w-4 h-4 m-3'
+                  onClick={switchValues}>
                     <ArrowsRightLeftIcon className="h-4 w-4 text-white hover:text-gray-400" />
                   </button>
                     
                     <div className='flex flex-col'  >
                     <label htmlFor="to" className="text-white ">Destination</label>
                     <select className='border rounded-md w-[200px] p-2 ' name='to' id='to'
-                    onChange={(e) => setFlight({...flight, to: e.target.value})} defaultValue=''
+                    onChange={(e) => setFlight({...flight, to: e.target.value})} value={flight.to}
                     >
                       <option value='' disabled>Select Destination</option>
                       {toDestination.map((d:any) => (

@@ -38,10 +38,7 @@ export async function POST(request: NextRequest) {
             referenceNumber: reqBody.referenceNumber
         };
 
-        const tokenData = {reqBody};
-
         
-        const token = jwt.sign(tokenData, process.env.TOKEN_SECRET!, {expiresIn: "1h"})
 
        
 
@@ -57,7 +54,10 @@ export async function POST(request: NextRequest) {
 
         const saveBookFlight = await newBookFlight.save();
 
-        console.log(saveBookFlight._doc);
+        const tokenData = {...reqBody , _id: saveBookFlight._id};
+
+        const token = jwt.sign(tokenData, process.env.TOKEN_SECRET!, {expiresIn: "1h"})
+
 
         const response = NextResponse.json({message: "Reservation created successfully", success: true}, {status: 201})
 

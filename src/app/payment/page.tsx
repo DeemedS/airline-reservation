@@ -3,14 +3,16 @@ import React, { use } from 'react'
 import Nav from '@/components/nav/nav'
 import ProgressBar from '@/components/progressBar/progressBar'
 import { useQRCode } from 'next-qrcode';
-import { getTokenData } from '@/helpers/getTokenData';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { set } from 'mongoose';
+import { useRouter } from 'next/navigation';
 
-const page = () => {
+
+const page = () => {  
 
     const { Canvas } = useQRCode();
+    const [selectedFile, setSelectedFile] = useState(null);
+    const router = useRouter();
   
     const [flightData , setFlightData] = useState({
         departureFlight: {
@@ -58,6 +60,7 @@ const page = () => {
         selectedPackage: '',
         packageCost: 0,
         referenceNumber: '',
+        _id: '',
     });
     
     useEffect(() => {
@@ -65,9 +68,9 @@ const page = () => {
           try {
             const res = await axios.get('/api/addons');
             console.log(res.data.tokenData);
-            setBookingData(res.data.tokenData.reqBody);
-            setFlightData(res.data.tokenData.reqBody.flightData);
-            setGuestInfo(res.data.tokenData.reqBody.guestInfo);
+            setBookingData(res.data.tokenData);
+            setFlightData(res.data.tokenData.flightData);
+            setGuestInfo(res.data.tokenData.guestInfo);
           } catch (error) {
             console.log(error);
           }
@@ -77,7 +80,33 @@ const page = () => {
     
       }, []);
 
-
+      const handleFileChange = (event: any) => {
+        setSelectedFile(event.target.files[0]);
+        console.log(event.target.files[0]);
+      };
+    
+      const handleFileUpload = async () => {
+        if (!selectedFile) return;
+    
+        const formData = new FormData();
+        formData.append('file', selectedFile);
+    
+        try {
+            const response = await axios.post('/api/upload', formData, {
+            params: {
+              bookingDataId: bookingData._id,
+              amount: flightData.departureFlight.fare + flightData.returnFlight?.fare + bookingData.packageCost || flightData.departureFlight.fare + bookingData.packageCost,
+              reference: bookingData.referenceNumber,
+            }
+            });
+    
+          console.log('File uploaded:', response.data);
+          router.push('/confirmation/' + bookingData.referenceNumber);
+          
+        } catch (error) {
+          console.error('Error uploading file:', error);
+        }
+      };
 
 
 
@@ -155,10 +184,12 @@ const page = () => {
   
         </div>
 
-        <div className="flex flex-col gap-4 my-5">
-        <p className="text-xs font-semibold">Upload your payment receipt</p>
-        <input type="file" className="border border-black-300 rounded-lg p-2"></input>
-        </div>
+
+        <input
+          type="file"
+          className="border border-black-300 rounded-lg p-2"
+          onChange={handleFileChange}
+        />
 
         
 
@@ -169,11 +200,13 @@ const page = () => {
     <button className='flex bg-red-200 rounded-lg p-2 w-25'
     onClick={() => {
       if (window.confirm(`Please save your reference number:  ${bookingData.referenceNumber}`)) {
-          window.location.href = '/';
+          window.location.href = '/confirmation/' + bookingData.referenceNumber;
       }
   }}>Pay Later</button>
 
-    <button className='flex bg-lime-200 rounded-lg p-2 w-20'>Continue</button>
+    <button className='flex bg-lime-200 rounded-lg p-2 w-20'
+    onClick={handleFileUpload}
+    >Continue</button>
 
     </div>
     </>

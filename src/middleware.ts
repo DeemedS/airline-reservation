@@ -17,6 +17,8 @@ export function middleware(request: NextRequest) {
 
   const flightDataToken = request.cookies.get('flightData')?.value || ''
 
+  const bookingDataToken = request.cookies.get('booking')?.value || ''
+
   const guestInfo = request.cookies.get('guestInfo')?.value || ''
 
 
@@ -41,6 +43,10 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/', request.url))
   }
 
+  if (path === '/payment' && !bookingDataToken) {
+    return NextResponse.redirect(new URL('/', request.url))
+}
+
 }
  
 // See "Matching Paths" below to learn more
@@ -51,6 +57,7 @@ export const config = {
     '/signup',
     '/guest-info',
     '/add-ons',
+    '/payment',
     '/search-flight/',
     '/myaccount/:path*', // matches /myaccount/anything/else
     '/admin/:path*', // matches /admin/anything/else

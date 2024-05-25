@@ -38,7 +38,7 @@ const Nav = () => {
                 </div>
             </nav>
 
-            <div id="sidebar" className="lg:block hidden bg-white w-64 h-full absolute rounded-none border-none">
+            <div id="sidebar" className="lg:block hidden bg-white w-64 min-h-[100%] absolute rounded-none border-none">
 
                 <div className="p-4 space-y-4">
 

@@ -47,13 +47,15 @@ const page = () => {
         fetchDestination()
     }, [])
 
-    const handleEdit = () => {
+    const handleEdit = (e : any) => {
+        e.preventDefault();
         setSaveLoading(true);
 
         axios.put("/api/admin/handleLocations", destination)
         .then(res => {
             window.confirm('Would you like to save changes?');
             setSaveLoading(false);
+            Router.push(`/admin/manage/manage-locations`);
         })
         .catch(err => {
             console.log(err);

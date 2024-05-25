@@ -54,6 +54,7 @@ const BookFlightSchema = new Schema({
         packageCost: { type: Number, required: true },
         referenceNumber: { type: String, required: true },
     },
+    paymentStatus: { type: String, default: 'pending' },
 });
 
 const BookFlight = mongoose.models.bookflights ||  mongoose.model<IBookFlight>('bookflights', BookFlightSchema);

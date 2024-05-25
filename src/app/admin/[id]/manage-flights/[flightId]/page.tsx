@@ -156,7 +156,8 @@ const getDestinations = async() => {
         fetchDestinations()
     }, [])
 
-    const handleEdit = () => {
+    const handleEdit = (e : any) => {
+        e.preventDefault();
         setSaveLoading(true);
 
         console.log(flight);
@@ -165,6 +166,7 @@ const getDestinations = async() => {
         .then(res => {
             window.confirm('Would you like to save changes?');
             setSaveLoading(false);
+            Router.push(`/admin/manage/manage-flights`);
         })
         .catch(err => {
             console.log(err);

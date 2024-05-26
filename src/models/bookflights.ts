@@ -4,6 +4,8 @@ interface IBookFlight extends Document {
     departureFlightId: string;
     returnFlightId: string;
     seatCode: string;
+    bookedDate: Date;
+    userID: string;
     guestInfo: {
         firstName: string,
         lastName: string,
@@ -32,6 +34,7 @@ const BookFlightSchema = new Schema({
     returnFlightId: { type: String},
     seatCode: {type: String, required: true },
     bookedDate: { type: Date, default: Date.now},
+    userID: { type: String },
     guestInfo: {
         firstName: { type: String, required: true },
         lastName: { type: String, required: true },

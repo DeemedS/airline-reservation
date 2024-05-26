@@ -14,6 +14,7 @@ export async function POST(request: NextRequest) {
         const departureFlightId = reqBody.flightData.departureFlight._id;
         const returnFlightId = reqBody.flightData.returnFlight?._id  || '';
         const seatCode = 'A1';
+        const userID = reqBody.userID || '';
 
         const guestInfo = {
             firstName: reqBody.guestInfo.firstName,

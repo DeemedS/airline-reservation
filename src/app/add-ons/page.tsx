@@ -30,6 +30,17 @@ const page = () => {
     const [loading, setLoading] = useState(false);
     const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
     const router = useRouter();
+    const [userID, setUserID] = useState<string | null>(null);
+
+    const fetchUserId = async () => {
+        try {
+          const res = await axios.get('/api/user')
+          const id = res.data.tokenData.id
+          setUserID(id);
+        } catch (error) {
+            console.log(error)
+          }
+        }
 
     const handlePackageSelection = (packageName: string) => {
       setSelectedPackage(prevSelectedPackage =>
@@ -129,6 +140,7 @@ const page = () => {
             fetchDestinations();
             getGuestInfo();
             getFlightData();
+            fetchUserId();
         }
         ,[])
 
@@ -175,6 +187,7 @@ const page = () => {
             selectedPackage,
             packageCost,
             referenceNumber: '2024' +  '-' + generate10DigitNumber(),
+            userID
           });
 
           console.log(res.status);

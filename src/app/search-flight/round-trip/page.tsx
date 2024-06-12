@@ -174,24 +174,41 @@ const Page = () => {
     const generateDates = (startDate: Date, count: number) => {
       const dates = [];
       for (let i = 0; i < count; i++) {
-        const currentDate = flight.departureDate ? new Date(flight.departureDate) : new Date();
-        currentDate.setDate(startDate.getDate() + i);
-        dates.push(currentDate);
+        const date = new Date(startDate);
+        date.setDate(startDate.getDate() + i);
+        dates.push(date);
       }
       return dates;
     };
   
     const departuredates = generateDates(selectedDepartureDate ? new Date(selectedDepartureDate) : new Date(), 3);
     const returndates = generateDates(selectedReturnDate ? new Date(selectedReturnDate) : new Date(), 3);
-  
-    const handleDepartureDateChange = async (increment: number) => {
-      const newDate = new Date(selectedDepartureDate || new Date());
-      newDate.setDate(newDate.getDate() + increment);
-      setSelectedDepartureDate(newDate.toISOString());
-      setSelectedDeparture(null);
-  
-      await fetchFlights(newDate.toISOString(), new Date(selectedReturnDate || new Date()).toISOString());
+
+    const handleDateChange = async (type: 'departure' | 'return', increment: number) => {
+      let currentDate = type === 'departure'
+        ? new Date(selectedDepartureDate || new Date())
+        : new Date(selectedReturnDate || new Date());
+    
+      currentDate.setDate(currentDate.getDate() + increment);
+    
+      if (type === 'departure') {
+        setSelectedDepartureDate(currentDate.toISOString());
+        setSelectedDeparture(null);
+      } else {
+        setSelectedReturnDate(currentDate.toISOString());
+        setSelectedReturn(null);
+      }
+    
+      await fetchFlights(
+        new Date(selectedDepartureDate || new Date()).toISOString(),
+        new Date(selectedReturnDate || new Date()).toISOString()
+      );
     };
+    
+    const handleDepartureDateChange = (increment: number) => handleDateChange('departure', increment);
+    const handleReturnDateChange = (increment: number) => handleDateChange('return', increment);
+  
+
   
     const handleDepartureDateClick = async (clickedDate: Date) => {
       setSelectedDepartureDate(clickedDate.toISOString());
@@ -206,14 +223,6 @@ const Page = () => {
     );
   };
 
-  const handleReturnDateChange = async (increment: number) => {
-    const newDate = new Date(selectedReturnDate || new Date());
-    newDate.setDate(newDate.getDate() + increment);
-    setSelectedReturnDate(newDate.toISOString());
-    setSelectedReturn(null)
-
-    await fetchFlights(new Date(selectedDepartureDate || new Date()).toISOString(), newDate.toISOString());
-  };
 
   const handleReturnDateClick = async (clickedDate: Date) => {
     setSelectedReturnDate(clickedDate.toISOString());
@@ -474,10 +483,14 @@ const Page = () => {
           <button className='flex bg-red-200 rounded-lg p-2 w-20'
           onClick={() => {window.location.href = '/'}}>Back</button>
 
-          <button className='flex bg-lime-200 rounded-lg p-2 w-20'
+        <button
+          className='flex bg-lime-200 rounded-lg p-2 w-20 disabled:opacity-50 disabled:cursor-not-allowed' 
+          {...(!selectedDeparture || !selectedReturn) && { disabled: true }}
           onClick={handleContinue}
-          >Continue</button>
-
+        >
+          Continue
+        </button>
+        
         </div>
 
     </>

@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 import { useParams } from 'next/navigation';
 
-const page = () => {
+const Page = () => {
 
 const { reference } = useParams();
 
@@ -44,4 +44,4 @@ const { reference } = useParams();
   )
 }
 
-export default page
+export default Page

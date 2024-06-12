@@ -14,7 +14,7 @@ interface Destination {
         City: string;
     }
 
-const page = () => {
+const Page = () => {
 
     const [saveLoading, setSaveLoading] = useState(false);
     const [deleteLoading, setDeleteLoading] = useState(false);
@@ -31,21 +31,20 @@ const page = () => {
 
 
 
-  const fetchDestination = async () => {
-    try {
-      const res = await axios.post("/api/admin/handleLocations", { locationId });
-      setDestination(res.data.destination);
-    } catch (error) {
-      console.log(error)
-    }
-  }
 
-
-    
 
     useEffect(() => {
+        const fetchDestination = async () => {
+            try {
+              const res = await axios.post("/api/admin/handleLocations", { locationId });
+              setDestination(res.data.destination);
+            } catch (error) {
+              console.log(error)
+            }
+          }
+
         fetchDestination()
-    }, [])
+    }, [locationId])
 
     const handleEdit = (e : any) => {
         e.preventDefault();
@@ -155,4 +154,4 @@ const page = () => {
     )                                    
 }
 
-export default page
+export default Page

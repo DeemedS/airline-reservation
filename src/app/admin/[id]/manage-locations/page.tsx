@@ -15,7 +15,7 @@ interface Destination {
   City: string;
 }
 
-const page = () => {
+const Page = () => {
   
   const [destinations, setDestinations] = useState<Destination[]>([]);
   const [loading, setLoading] = useState(true)
@@ -131,4 +131,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

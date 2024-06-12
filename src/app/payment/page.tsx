@@ -8,7 +8,7 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation';
 
 
-const page = () => {  
+const Page = () => {  
 
     const { Canvas } = useQRCode();
     const [selectedFile, setSelectedFile] = useState(null);
@@ -218,4 +218,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

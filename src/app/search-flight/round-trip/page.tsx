@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react'
+import React, { useCallback, useMemo } from 'react'
 import Nav from '@/components/nav/nav'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlane } from '@fortawesome/free-solid-svg-icons'
@@ -33,7 +33,7 @@ interface Destination {
   City: string;
 }
 
-const page = () => {
+const Page = () => {
 
   const searchParams = useSearchParams();
   
@@ -50,13 +50,13 @@ const page = () => {
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
-
-  const flight = {
+  const flight = useMemo(() => ({
     from: searchParams.get('from'),
     to: searchParams.get('to'),
     departureDate: selectedDepartureDate || searchParams.get('departureDate'),
     returnDate: selectedReturnDate || searchParams.get('returnDate'),
-  };
+}), [searchParams, selectedDepartureDate, selectedReturnDate]);
+
 
   const fetchFlights = async (updatedDepartureDate: string, updatedReturnDate: string) => {
     setIsLoading(true);
@@ -85,7 +85,7 @@ const page = () => {
     }
   };
 
-  const getflight = async () => {
+  const getflight = useCallback(async () => {
     try {
       const res = await axios.post('/api/flight', flight);
       return res.data;
@@ -93,6 +93,7 @@ const page = () => {
       console.error('Error loading flights', error);
     }
   }
+  , [flight]);
 
   const getDestinations = async() => {
     try {
@@ -155,7 +156,7 @@ const page = () => {
 
     fetchFlights();
     fetchDestinations();
-  }, []);
+  }, [getflight]);
 
 
   const getDestinationFromName = () => {
@@ -483,4 +484,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

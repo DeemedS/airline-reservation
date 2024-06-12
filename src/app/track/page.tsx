@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import axios from 'axios';
 import { set } from 'mongoose';
 
-const page = () => {
+const Page = () => {
 
   const [reservationID, setReservationID] = React.useState('')
   const [message, setMessage] = React.useState('')
@@ -65,4 +65,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

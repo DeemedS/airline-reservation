@@ -6,9 +6,6 @@ import { useRouter, useParams } from 'next/navigation';
 import formatTime from '@/helpers/formatTime';
 import formatDate from '@/helpers/formatDate';
 import convertTo24Hour from '@/helpers/convertTo24Hour';
-import { set } from 'mongoose';
-import { split } from 'postcss/lib/list';
-
 
 interface Flight {
         _id: string;
@@ -29,7 +26,7 @@ interface Destination {
         City: string;
     }
 
-const page = () => {
+const Page = () => {
 
     const { flightId } = useParams();
     const [saveLoading, setSaveLoading] = useState(false);
@@ -111,50 +108,49 @@ const handleArrivalChange = (type: string, value: string) => {
 
 
 
-    
-const getDestinations = async() => {
-        try {
-            const res = await fetch('/api/destination', { cache: 'no-store' });
-    
-            if (!res.ok) {
-                throw new Error('Failed to fetch destinations');
-            }
-            return res.json();
-        } catch (error) {
-            console.error('Error loading destinations', error);
-        }
-    };
-
-    const fetchDestinations = async () => {
-        try {
-            const data = await getDestinations();
-
-            if (Array.isArray(data.destinations)) {
-                setDestinations(data.destinations);
-            } else {
-                console.error('Data received from the API is not an array:', data);
-            }
-        } catch (error) {
-            console.error('Error fetching destinations:', error);
-        }
-    };
-
-    const fetchFlights = async () => {
-        try {
-            const res = await axios.post("/api/admin/handleFlights", { flightId });
-            setFlight(res.data.flight);
-            setDepartureTime(formatTime(res.data.flight.departure));
-            setArrivalTime(formatTime(res.data.flight.arrival));
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-
     useEffect(() => {
+
+        const getDestinations = async() => {
+            try {
+                const res = await fetch('/api/destination', { cache: 'no-store' });
+        
+                if (!res.ok) {
+                    throw new Error('Failed to fetch destinations');
+                }
+                return res.json();
+            } catch (error) {
+                console.error('Error loading destinations', error);
+            }
+        };
+    
+        const fetchDestinations = async () => {
+            try {
+                const data = await getDestinations();
+    
+                if (Array.isArray(data.destinations)) {
+                    setDestinations(data.destinations);
+                } else {
+                    console.error('Data received from the API is not an array:', data);
+                }
+            } catch (error) {
+                console.error('Error fetching destinations:', error);
+            }
+        };
+    
+        const fetchFlights = async () => {
+            try {
+                const res = await axios.post("/api/admin/handleFlights", { flightId });
+                setFlight(res.data.flight);
+                setDepartureTime(formatTime(res.data.flight.departure));
+                setArrivalTime(formatTime(res.data.flight.arrival));
+            } catch (error) {
+                console.log(error)
+            }
+        }
+
         fetchFlights()
         fetchDestinations()
-    }, [])
+    }, [flightId])
 
     const handleEdit = (e : any) => {
         e.preventDefault();
@@ -213,7 +209,7 @@ const getDestinations = async() => {
                                 >
                                 <option value=''>Select Origin</option>
                                 {destinations.map((d:any) => (
-                                        <option value={d.Abv}>
+                                        <option value={d.Abv} key={d._id}>
                                                 {d.City}
                                         </option>
                                 ))}
@@ -228,7 +224,7 @@ const getDestinations = async() => {
                                         >
                                         <option value=''>Select Destination</option>
                                         {destinations.map((d:any) => (
-                                                        <option value={d.Abv}>
+                                                        <option value={d.Abv} key={d._id}>
                                                                 {d.City}
                                                         </option>
                                                          ))}
@@ -396,4 +392,4 @@ const getDestinations = async() => {
     )                                    
 }
 
-export default page
+export default Page

@@ -1,16 +1,29 @@
 "use client";
 
-import React, { useEffect } from 'react'
+import { useEffect, useState } from "react";
 import Link from "next/link"
 import { useRouter } from 'next/navigation'
 import axios from 'axios';
 import nationalities from '@/helpers/nationalities';
 
-export const Signup = () => {
+interface User {
+  firstname: string;
+  lastname: string;
+  middlename: string;
+  nationality: string;
+  gender: string;
+  birthday: string;
+  username: string;
+  email: string;
+  password: string;
+  confirmpassword: string;
+}
+
+const Page = () => {
 
   const router = useRouter();
 
-  const [user, setUser] = React.useState({
+  const [user, setUser] = useState<User>({
     firstname: "",
     lastname: "",
     middlename: "",
@@ -24,10 +37,11 @@ export const Signup = () => {
   })
 
 
-  const [loading, setLoading] = React.useState(false);
-  const [buttonDisabled, setButtonDisabled] = React.useState(false);
-  const [error, setError] = React.useState(false);
-  const [passwordMatch, setPasswordMatch] = React.useState(false);
+  const [loading, setLoading] = useState(false);
+  const [buttonDisabled, setButtonDisabled] = useState(false);
+  const [error, setError] = useState(false);
+  const [passwordMatch, setPasswordMatch] = useState(false);
+  const [message, setMessage] = useState("");
 
   const onSignup = async (e: any) => {
     try {
@@ -220,4 +234,4 @@ useEffect(() => {
   )
 }
 
-export default Signup
+export default Page

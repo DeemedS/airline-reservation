@@ -1,12 +1,16 @@
 "use client";
-import nationalities from '@/helpers/nationalities';
-import { useState, useEffect } from 'react'
+
+import React, { use } from 'react'
+import Nav from '@/components/nav/nav'
+import { useRouter, useParams } from 'next/navigation'
 import axios from 'axios';
-import { useRouter, useParams } from 'next/navigation';
-import { getTokenData } from '@/helpers/getTokenData';
+import formatDate from '@/helpers/formatDate';
+import { useState, useEffect } from 'react';
+import nationalities from '@/helpers/nationalities';
+
+
 
 interface User {
-  _id: string;
   firstname: string;
   lastname: string;
   middlename: string;
@@ -15,20 +19,19 @@ interface User {
   birthday: string;
   username: string;
   email: string;
-  password: string;
   role: string;
 }
 
+
+
 const Page = () => {
 
-  const { userId } = useParams();
+  
+  const router = useRouter()
+  const { userId } = useParams()
   const [saveLoading, setSaveLoading] = useState(false);
 
-  
-  const Router = useRouter();
-
   const [user, setUser] = useState<User>({
-    _id: '',
     firstname: '',
     lastname: '',
     middlename: '',
@@ -37,41 +40,52 @@ const Page = () => {
     birthday: '',
     username: '',
     email: '',
-    password: '',
-    role: 'user',
+    role: ''
   });
 
 
- 
-
-  const handleAddUser = async (e: any) => {
-    e.preventDefault()
+  const handleEdit = () => {
     setSaveLoading(true);
-    try {
-    const res = await axios.post("/api/user/signup", user)
-    console.log(res);
-    if (res.status === 201) {
-      window.alert('User created successfully');
-    }
-    Router.push(`/admin/manage/manage-users`);
-  }
-    catch (error) {
-      console.log(error);
-    }
-    finally {
-      setSaveLoading(false);
-    }
+    axios.put("/api/admin/handleUser", user)
+      .then(res => {
+        window.confirm('Would you like to save changes?');
+        setSaveLoading(false);
+        window.alert('Changes saved successfully');
+      })
+      .catch(err => {
+        console.log(err);
+      });
   };
 
+  useEffect(() => {
 
+    const fetchUserInfo = async () => {
+      try {
+        console.log(userId)
+        const res = await axios.post("/api/admin/handleUser", { userId });
+        setUser(res.data.user)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    fetchUserInfo()
+  }, [userId])
 
   return (
-    <div className="lg:ml-64 px-6 py-8">
-      <div className="relative bg-white rounded-md border-none p-10 mb-4 shadow-md h-[800px]">
-  
-      <form className="mt-6">
+    <>
+        <Nav />
 
-          <div className="flex flex-wrap mb-4 gap-5">
+        <div className="flex flex-col">
+        <div className="mt-[90px] lg:mt-[100px]">
+        </div>
+        </div>
+  
+
+        <div className="relative flex flex-col  mx-[5%] md:mx-[10%] xl:mx-[25%] list-none p-5 rounded-lg bg-white mt-5 h-[650px]  ">
+          
+        <div className="text-3xl font-bold mt-5 text-center">Edit Information</div>
+
+        <div className="flex flex-wrap my-4 gap-5">
 
             <div className='w-[25%]'>
             <label htmlFor="firstname" className="block text-sm font-semibold text-gray-800">First Name</label>
@@ -82,7 +96,7 @@ const Page = () => {
             placeholder='First Name'
             className="w-[100%] px-4 py-2 mt-2 text-gray-700 bg-white border rounded-md focus:border-gray-400 focus:ring-gray-300 focus:outline-none focus:ring focus:ring-opacity-40" />
             </div>
-            
+
             <div className='w-[25%]'>
             <label htmlFor="lastname" className="block text-sm font-semibold text-gray-800">Last Name</label>
             <input id='lastname' name='lastname'
@@ -105,7 +119,7 @@ const Page = () => {
 
           </div>
 
-          <div className="flex flex-wrap mb-4 gap-5">
+          <div className="flex mb-4 gap-5">
               
               <div className='w-[25%]'>
               <label htmlFor="birthday" className="block text-sm font-semibold text-gray-800">Birthday</label>
@@ -146,8 +160,6 @@ const Page = () => {
 
                 </select>
               </div>
-
-
           </div>
 
           <div className="mb-4">
@@ -157,7 +169,7 @@ const Page = () => {
             value={user.username}
             onChange={(e) => setUser({...user, username: e.target.value})}
             placeholder='Username'
-            className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border rounded-md focus:border-gray-400 focus:ring-gray-300 focus:outline-none focus:ring focus:ring-opacity-40" />
+            className="block w-[50%] px-4 py-2 mt-2 text-gray-700 bg-white border rounded-md focus:border-gray-400 focus:ring-gray-300 focus:outline-none focus:ring focus:ring-opacity-40" />
           </div>
 
           <div className="mb-4">
@@ -167,47 +179,22 @@ const Page = () => {
             value={user.email}
             onChange={(e) => setUser({...user, email: e.target.value})}
             placeholder='Email'
-            className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border rounded-md focus:border-gray-400 focus:ring-gray-300 focus:outline-none focus:ring focus:ring-opacity-40" />
+            className="block w-[50%] px-4 py-2 mt-2 text-gray-700 bg-white border rounded-md focus:border-gray-400 focus:ring-gray-300 focus:outline-none focus:ring focus:ring-opacity-40" />
           </div>
 
-          <div className="mb-4">
-            <label htmlFor="password" className="block text-sm font-semibold text-gray-800">Password</label>
-            <input id='password' name='password'
-            type="password"
-            value={user.password}
-            onChange={(e) => setUser({...user, password: e.target.value})}
-            placeholder='Password'
-            className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border rounded-md focus:border-gray-400 focus:ring-gray-300 focus:outline-none focus:ring focus:ring-opacity-40" />
-        </div>
-
-          <div className="mb-4">
-
-          <div className='w-[25%]'>
-                <label htmlFor='role' className="block text-sm font-semibold text-gray-800">Role</label>
-                <select id='role' name='role' 
-                onChange={(e) => setUser({...user, role: e.target.value})}
-                value={user.role}
-                className='w-50% px-4 py-2 mt-2 text-gray-700 bg-white border rounded-md focus:border-gray-400 focus:ring-gray-300 focus:outline-none focus:ring focus:ring-opacity-40'
-                >
-                <option value="" disabled>Select Role</option>
-                <option value="user">User</option>
-                <option value="admin">Admin</option>
-                </select>
-              </div>
-          </div>
-
-          <div className="flex flex-row absolute bottom-0 right-0 m-5 w-[20%]">
+          <div className="flex flex-row gap-4 absolute bottom-0  m-5 w-[50%]">
             <button
-              className="w-[100%] px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-green-700 rounded-md hover:bg-green-600 focus:outline-none focus:bg-green-600"
-              onClick={handleAddUser}>
-                {saveLoading ? "Pocessing..." : "Create User"}
+              className="w-[50%] px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-green-700 rounded-md hover:bg-green-600 focus:outline-none focus:bg-green-600"
+              onClick={handleEdit}>
+                {saveLoading ? "Pocessing..." : "Save Changes"}
             </button>
           </div>
 
-          </form> 
+        </div>
 
-      </div>
-    </div>
+        
+
+    </>
   )
 }
 

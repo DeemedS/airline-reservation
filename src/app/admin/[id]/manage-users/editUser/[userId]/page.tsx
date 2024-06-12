@@ -18,7 +18,7 @@ interface User {
   role: string;
 }
 
-const page = () => {
+const Page = () => {
 
   const { userId } = useParams();
   const [saveLoading, setSaveLoading] = useState(false);
@@ -40,18 +40,21 @@ const page = () => {
     role: '',
   });
 
-  const fetchUser = async () => {
-    try {
-      const res = await axios.post("/api/admin/handleUser", { userId });
-      setUser(res.data.user);
-    } catch (error) {
-      console.log(error)
-    }
-  }
+
 
   useEffect(() => {
+
+    const fetchUser = async () => {
+      try {
+        const res = await axios.post("/api/admin/handleUser", { userId });
+        setUser(res.data.user);
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    
     fetchUser()
-  }, [])
+  }, [userId])
 
   const handleEdit = () => {
     setSaveLoading(true);
@@ -226,4 +229,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

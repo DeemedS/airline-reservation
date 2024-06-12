@@ -27,7 +27,7 @@ interface Destination {
         City: string;
     }
 
-const page = () => {
+const Page = () => {
 
     const [saveLoading, setSaveLoading] = useState(false);
     const [destinations, setDestinations] = useState<Destination[]>([]);
@@ -107,35 +107,37 @@ const handleArrivalChange = (type: string, value: string) => {
 
 
     
-const getDestinations = async() => {
-        try {
-            const res = await fetch('/api/destination', { cache: 'no-store' });
-    
-            if (!res.ok) {
-                throw new Error('Failed to fetch destinations');
-            }
-            return res.json();
-        } catch (error) {
-            console.error('Error loading destinations', error);
-        }
-    };
-
-    const fetchDestinations = async () => {
-        try {
-            const data = await getDestinations();
-
-            if (Array.isArray(data.destinations)) {
-                setDestinations(data.destinations);
-            } else {
-                console.error('Data received from the API is not an array:', data);
-            }
-        } catch (error) {
-            console.error('Error fetching destinations:', error);
-        }
-    };
 
 
     useEffect(() => {
+
+        const getDestinations = async() => {
+            try {
+                const res = await fetch('/api/destination', { cache: 'no-store' });
+        
+                if (!res.ok) {
+                    throw new Error('Failed to fetch destinations');
+                }
+                return res.json();
+            } catch (error) {
+                console.error('Error loading destinations', error);
+            }
+        };
+    
+        const fetchDestinations = async () => {
+            try {
+                const data = await getDestinations();
+    
+                if (Array.isArray(data.destinations)) {
+                    setDestinations(data.destinations);
+                } else {
+                    console.error('Data received from the API is not an array:', data);
+                }
+            } catch (error) {
+                console.error('Error fetching destinations:', error);
+            }
+        };
+        
         fetchDestinations()
     }, [])
 
@@ -184,7 +186,7 @@ const getDestinations = async() => {
                                 >
                                 <option value=''>Select Origin</option>
                                 {destinations.map((d:any) => (
-                                        <option value={d.Abv}>
+                                        <option value={d.Abv} key={d._id}>
                                                 {d.City}
                                         </option>
                                 ))}
@@ -199,7 +201,7 @@ const getDestinations = async() => {
                                         >
                                         <option value=''>Select Destination</option>
                                         {destinations.map((d:any) => (
-                                                        <option value={d.Abv}>
+                                                        <option value={d.Abv} key={d._id}>
                                                                 {d.City}
                                                         </option>
                                                          ))}
@@ -366,4 +368,4 @@ const getDestinations = async() => {
     )                                    
 }
 
-export default page
+export default Page

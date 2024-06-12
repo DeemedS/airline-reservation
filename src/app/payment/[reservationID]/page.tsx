@@ -62,7 +62,7 @@ interface GuestInfo {
   }
 
 
-const page = () => {  
+const Page = () => {  
 
     const { Canvas } = useQRCode();
     const { reservationID } = useParams();
@@ -94,18 +94,7 @@ const page = () => {
       }
     );
 
-    const getBookingData = async () => {
-        try {
-            console.log(reservationID);
-            const res = await axios.post(`/api/track`, { reservationID });
-            setBookingData(res.data);
-            fetchDepartureFlight(res.data.departureFlightId);
-            fetchReturnFlight(res.data.returnFlightId);
-            console.log(res.data);
-        } catch (error) {
-            console.log(error);
-        }
-    }
+
 
     const fetchDepartureFlight = async (departureID: string) => {
         try {
@@ -130,8 +119,20 @@ const page = () => {
     }
     
     useEffect(() => {
+      const getBookingData = async () => {
+        try {
+            console.log(reservationID);
+            const res = await axios.post(`/api/track`, { reservationID });
+            setBookingData(res.data);
+            fetchDepartureFlight(res.data.departureFlightId);
+            fetchReturnFlight(res.data.returnFlightId);
+            console.log(res.data);
+        } catch (error) {
+            console.log(error);
+        }
+    }
         getBookingData();
-    }, []);
+    }, [reservationID]);
 
     const handleFileChange = (event: any) => {
         setSelectedFile(event.target.files[0]);
@@ -264,4 +265,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

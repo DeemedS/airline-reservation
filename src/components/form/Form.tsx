@@ -116,7 +116,7 @@ const Form = async() => {
                   >
                     <option value='' disabled>Select Destination</option>
                     {destinations.map((d:any) => (
-                    <option value={d.City}>
+                    <option value={d.City} key={d._id}>
                       {d.City}
                     </option>
                     ))}
@@ -130,7 +130,7 @@ const Form = async() => {
                     onChange={(e) => setFlight({...flight, to: e.target.value})}
                     >
                       {destinations.map((d:any) => (
-                      <option value={d.City}>
+                      <option value={d.City} key={d._id}>
                         {d.City}
                       </option>
                       ))}

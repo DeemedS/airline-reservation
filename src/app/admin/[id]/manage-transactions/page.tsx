@@ -15,7 +15,7 @@ interface Payments {
     date: Date;
 }
 
-const page = () => {
+const Page = () => {
   
   const [payments, setPayments] = useState<Payments[]>([]);
   const [loading, setLoading] = useState(true)
@@ -130,4 +130,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

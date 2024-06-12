@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import axios from 'axios';
 import { useRouter, useParams } from 'next/navigation';
 import formatDate from '@/helpers/formatDate';
+import Image from 'next/image';
 
 
 
@@ -16,7 +17,7 @@ interface Payment {
     date: Date;
 }
 
-const page = () => {
+const Page = () => {
     
         
     const Router = useRouter();
@@ -35,21 +36,21 @@ const page = () => {
     });
 
 
-  const fetchPayment = async () => {
-    try {
-      const res = await axios.post("/api/admin/handlePayments", { paymentId });
-      setPayment(res.data.payment);
-    } catch (error) {
-      console.log(error)
-    }
-  }
 
-
-    
 
     useEffect(() => {
+
+        const fetchPayment = async () => {
+            try {
+              const res = await axios.post("/api/admin/handlePayments", { paymentId });
+              setPayment(res.data.payment);
+            } catch (error) {
+              console.log(error)
+            }
+          }
+
         fetchPayment();
-    }, [])
+    }, [paymentId])
 
     const handleEdit = (e : any) => {
         e.preventDefault();
@@ -100,7 +101,7 @@ const page = () => {
             
             <h2 className="text-l my-3">Proof of Payment:</h2>
             <div className="h-[70%] w-[70%]">
-            <img src={'/payments/'+ payment.proofOfPayment} alt="" />
+            <Image src={`/payments/${payment.proofOfPayment}`} alt="" width={500} height={500} />
             </div>
 
             <h2 className="text-l">Status:</h2>
@@ -136,4 +137,4 @@ const page = () => {
     )                                    
 }
 
-export default page
+export default Page

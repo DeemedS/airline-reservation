@@ -17,7 +17,7 @@ interface Flight {
   fare: number;
 }
 
-const page = () => {
+const Page = () => {
   
   const [flights, setFlights] = useState<Flight[]>([]);
   const [loading, setLoading] = useState(true)
@@ -129,4 +129,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

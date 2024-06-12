@@ -48,15 +48,7 @@ const Page = () => {
   const router = useRouter();
   const { bookingId } = useParams();
 
-  const fetchBooking = async () => {
-    try {
-      const res = await axios.post("/api/admin/handleBookFlights", { bookingId });
-      setBookFlight(res.data.bookFlight);
-      console.log(res.data.bookFlight);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+
 
   const handleEdit = (e: any) => {
     e.preventDefault();
@@ -94,11 +86,20 @@ const Page = () => {
     }
 };
 
-  useEffect(() => {
-    if (bookingId) {
-      fetchBooking();
-    }
-  }, [bookingId]);
+
+    useEffect(() => {
+
+        const fetchBooking = async () => {
+            try {
+              const res = await axios.post("/api/admin/handleBookFlights", { bookingId });
+              setBookFlight(res.data.bookFlight);
+            } catch (error) {
+              console.log(error);
+            }
+          };
+
+        fetchBooking();
+    }, [bookingId]);
 
 
   return (

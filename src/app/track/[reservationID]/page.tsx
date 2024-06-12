@@ -1,6 +1,6 @@
 "use client";
 
-import React, { use } from 'react'
+import React, { use, useCallback } from 'react'
 import Nav from '@/components/nav/nav'
 import { useQRCode } from 'next-qrcode';
 import { useRouter, useParams } from 'next/navigation';
@@ -74,7 +74,7 @@ interface GuestInfo {
     date: Date;
   }
 
-const page = () => {
+const Page = () => {
 
 const { Canvas } = useQRCode();
 const router = useRouter();
@@ -85,27 +85,26 @@ const [departureFlight, setDepartureFlight] = useState<DepartureFlight>();
 const [returnFlight, setReturnFlight] = useState<ReturnFlight>();
 const [payment, setPayment] = useState<Payment>();
 
-const fetchReservation = async () => {
+const fetchReservation = useCallback(async () => {
     try {
-        const res = await axios.post(`/api/track`, { reservationID });
-        setReservation(res.data);
-        fetchDepartureFlight(res.data.departureFlightId);
-        fetchReturnFlight(res.data.returnFlightId);
-        console.log(res.data);
+      const res = await axios.post(`/api/track`, { reservationID });
+      setReservation(res.data);
+      fetchDepartureFlight(res.data.departureFlightId);
+      fetchReturnFlight(res.data.returnFlightId);
     } catch (error) {
-        console.log(error);
+      console.log(error);
     }
-}
+  }, [reservationID]);
 
-const fetchPayment = async () => {
+
+  const fetchPayment = useCallback(async () => {
     try {
-        const res = await axios.post(`/api/findPayment`, { reservationID });
-        setPayment(res.data);
-        console.log(res.data);
+      const res = await axios.post(`/api/findPayment`, { reservationID });
+      setPayment(res.data);
     } catch (error) {
-        console.log(error);
-        }
+      console.log(error);
     }
+  }, [reservationID]);
 
     const fetchDepartureFlight = async (departureID: string) => {
         try {
@@ -133,8 +132,7 @@ const fetchPayment = async () => {
     useEffect(() => {
         fetchReservation();
         fetchPayment();
-    }
-    , []);
+      }, [fetchReservation, fetchPayment]);
 
       return (
         <>
@@ -312,4 +310,4 @@ const fetchPayment = async () => {
       )
     }
 
-    export default page
+    export default Page

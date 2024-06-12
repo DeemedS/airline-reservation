@@ -19,7 +19,7 @@ interface User {
   __v: number;
 }
 
-const page = () => {
+const Page = () => {
   
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true)
@@ -125,4 +125,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

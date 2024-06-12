@@ -24,7 +24,7 @@ interface Destination {
   }
 
 
-const page = () => {
+const Page = () => {
 
     const [destinations, setDestinations] = useState<Destination[]>([]);
     const [loading, setLoading] = useState(false);
@@ -417,4 +417,4 @@ onClick={handleContinue}>{loading ? 'Processing...' : 'Reserve Ticket' }</button
   )
 }
 
-export default page
+export default Page

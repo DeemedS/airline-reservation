@@ -37,7 +37,7 @@ interface TokenData {
 }
 
 
-const page = () => {
+const Page = () => {
 
   const router = useRouter();
   const [processing, setProcessing] = useState<boolean>(false);
@@ -453,4 +453,4 @@ disabled={buttonDisabled}
   )
 }
 
-export default page
+export default Page

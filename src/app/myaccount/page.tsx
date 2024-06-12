@@ -11,89 +11,10 @@ import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronRight, faChevronLeft, faPlane } from '@fortawesome/free-solid-svg-icons'
 import cookie from 'cookie';
-
-interface Flight {
-  _id: string;
-  from: string;
-  to: string;
-  date: Date;
-  arrival: string;
-  departure: string;
-  code: string;
-}
-
-interface User {
-  firstname: string;
-  lastname: string;
-  middlename: string;
-  nationality: string;
-  gender: string;
-  birthday: string;
-  username: string;
-  email: string;
-  role: string;
-}
-
-interface Reservation {
-  _id: string;
-  departureFlightId: string;
-  returnFlightId: string;
-  seatCode: string;
-  bookedDate: Date;
-  userID: string;
-  guestInfo: {
-      firstName: string,
-      lastName: string,
-      middleName: string,
-      birthday: string,
-      age: string,
-      nationality: string,
-      gender: string,
-      email: string,
-      phone: string, 
-      secondaryPhone: string,
-      addressline1: string,
-      addressline2: string,
-      city: string,
-      region: string,
-      zip: string,},
-  bookingData: {
-      selectedPackage: string,
-      packageCost: number,
-      referenceNumber: string,
-  },
-  paymentStatus: string,
-}
-
-interface DepartureFlight {
-  from: string;
-  to: string;
-  date: Date;
-  arrival: Date;
-  departure: Date;
-  code: string;
-  fare: number;
-}
-
-interface ReturnFlight {
-  from: string;
-  to: string;
-  date: Date;
-  arrival: Date;
-  departure: Date;
-  code: string;
-  fare: number;
-}
-
-interface Booking {
-  departureFlight: DepartureFlight
-  returnFlight: ReturnFlight
-  reservation: Reservation
-}
+import { Booking, Flight, Reservation, User, DepartureFlight, ReturnFlight  } from '@/helpers/interface';
 
 
-
-const page = () => {
+const Page = () => {
 
   
   const router = useRouter()
@@ -102,48 +23,13 @@ const page = () => {
   const [userInfo, setUserInfo] = useState<User | null>(null);
   const [bookingData, setBookingData] = useState<Booking[]>([]);
 
-  const fetchUserId = async () => {
-    try {
-      const res = await axios.get('/api/user')
-      const id = res.data.tokenData.id
-      setUserID(id);
-      fetchUserInfo(id)
-      fetchReservations(id)
-      
-    } catch (error) {
-        console.log(error)
-      }
-    }
-  
-  const fetchUserInfo = async (userId: string) => {
-    try {
-      const res = await axios.post('/api/user', { userId })
-      console.log(res.data)
-      setUserInfo(res.data)
-    } catch (error) {
-      console.log(error)
-    }
-  }
 
-  const fetchReservations = async (userId: string) => {
-    try {
-      const res = await axios.post('/api/user/reservation', { userId })
-      console.log(res.data)
-      res.data.forEach(async (reservation: Reservation) => {
-        const departure = await fetchDepartureFlight(reservation.departureFlightId);
-        const returnFlight = await fetchReturnFlight(reservation.returnFlightId);
-        setBookingData(prevData => [...prevData, { departureFlight: departure, returnFlight: returnFlight, reservation: reservation }]);
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  
+
 
   const fetchDepartureFlight = async (departureID: string) => {
     try {
-        console.log(departureID);
         const res = await axios.post(`/api/findFlight`, { flightID: departureID });
-        console.log(res.data);
         return res.data;
     } catch (error) {
         console.log(error);
@@ -152,7 +38,6 @@ const page = () => {
 
 const fetchReturnFlight = async (returnID: string) => {
     try {
-        console.log(returnID);
         const res = await axios.post(`/api/findFlight`, { flightID: returnID });
         return res.data;
     } catch (error) {
@@ -178,6 +63,42 @@ const cancelReservation = async (bookingId: string) => {
 
 
   useEffect(() => {
+
+    const fetchUserId = async () => {
+      try {
+        const res = await axios.get('/api/user')
+        const id = res.data.tokenData.id
+        setUserID(id);
+        fetchUserInfo(id)
+        fetchReservations(id)
+        
+      } catch (error) {
+          console.log(error)
+        }
+      }
+
+      const fetchUserInfo = async (userId: string) => {
+        try {
+          const res = await axios.post('/api/user', { userId })
+          setUserInfo(res.data)
+        } catch (error) {
+          console.log(error)
+        }
+      }
+    
+      const fetchReservations = async (userId: string) => {
+        try {
+          const res = await axios.post('/api/user/reservation', { userId })
+          res.data.forEach(async (reservation: Reservation) => {
+            const departure = await fetchDepartureFlight(reservation.departureFlightId);
+            const returnFlight = await fetchReturnFlight(reservation.returnFlightId);
+            setBookingData(prevData => [...prevData, { departureFlight: departure, returnFlight: returnFlight, reservation: reservation }]);
+          });
+        } catch (error) {
+          console.log(error);
+        }
+      }
+
     fetchUserId()
   }, [])
 
@@ -205,6 +126,10 @@ const cancelReservation = async (bookingId: string) => {
 
           <div className="flex flex-col w-1/2 md:mx-10 mt-3">
             <h5 className="text-sm font-bold">Email : {userInfo?.email}</h5>
+          </div>
+
+          <div className="flex flex-col w-1/2 md:mx-10 mt-3">
+            <a href={'myaccount/edit/' + userID} className="text-xs font-bold text-blue-400 underline">Edit Profile</a>
           </div>
 
         <hr className="border border-zinc-100 mt-5"/>
@@ -314,4 +239,4 @@ const cancelReservation = async (bookingId: string) => {
   )
 }
 
-export default page
+export default Page

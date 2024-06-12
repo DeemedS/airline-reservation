@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react'
+import React, { use, useMemo } from 'react'
 import Nav from '@/components/nav/nav'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronRight, faChevronLeft, faPlane } from '@fortawesome/free-solid-svg-icons'
@@ -32,7 +32,7 @@ interface Destination {
 
 
 
-const page = () => {
+const Page = () => {
   const searchParams = useSearchParams();
   const [flightData, setFlightData] = useState<Flight[]>([]);
   const [destinations, setDestinations] = useState<Destination[]>([]);
@@ -44,11 +44,11 @@ const page = () => {
   const isoDate = new Date(departureDate || new Date()).toISOString();
 
 
-  const flight = {
-    from: searchParams.get('from'),
-    to: searchParams.get('to'),
+  const flight = useMemo(() => ({
+    from: searchParams.get('from') || '',
+    to: searchParams.get('to') || '',
     departureDate: isoDate,
-  };
+}), [searchParams, isoDate]);
 
   const fetchFlights = async (updatedDate: string) => {
     setIsLoading(true);
@@ -76,15 +76,6 @@ const page = () => {
   };
 
   
-  const getflight = async () => {
-    try {
-      const res = await axios.post('/api/flight', flight);
-      console.log(res.data); 
-      return res.data;
-    } catch (error) {
-      console.error('Error loading flights', error);
-    }
-  };
 
 
   const getDestinations = async() => {
@@ -144,10 +135,20 @@ const page = () => {
       }
     };
 
+    const getflight = async () => {
+      try {
+        const res = await axios.post('/api/flight', flight);
+        console.log(res.data); 
+        return res.data;
+      } catch (error) {
+        console.error('Error loading flights', error);
+      }
+    };
+
     getTokenFlightData();
     fetchFlights();
     fetchDestinations();
-  }, []);
+  }, [flight]);
 
   const getDestinationFromName = () => {
   const filteredDestinations = destinations.filter((destination) => destination.Abv === flight.from);
@@ -348,4 +349,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

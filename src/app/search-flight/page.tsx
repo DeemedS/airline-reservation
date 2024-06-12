@@ -30,7 +30,7 @@ const getDestinations = async() => {
 
 
 
-const page = () => {
+const Page = () => {
 
   const router = useRouter();
   
@@ -138,7 +138,7 @@ const page = () => {
               >
                 <option value=''>Select Origin</option>
                 {destinations.map((d:any) => (
-                  <option value={d.Abv}>
+                  <option value={d.Abv} key={d._id}>
                     {d.City}
                   </option>
                 ))}
@@ -152,7 +152,7 @@ const page = () => {
               >
               <option value=''>Select Destination</option>
               {toDestination.map((d:any) => (
-                  <option value={d.Abv}>
+                  <option value={d.Abv} key={d._id}>
                     {d.City}
                   </option>
                    ))}
@@ -197,4 +197,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

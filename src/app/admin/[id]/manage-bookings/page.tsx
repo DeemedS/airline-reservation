@@ -3,43 +3,13 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios';
 import { useRouter, useParams } from 'next/navigation';
-import { set } from 'mongoose';
-
-interface BookFlights {
-  _id: string;
-  departureFlightId: string;
-  returnFlghtId: string;
-  seatCode: string;
-  guestInfo: {
-    firstName: string;
-    lastName: string;
-    middleName: string;
-    birthday: string;
-    age: string;
-    nationality: string;
-    gender: string;
-    email: string;
-    phone: string;
-    secondaryPhone: string;
-    addressline1: string;
-    addressline2: string;
-    city: string;
-    region: string;
-    zip: string;
-  };
-  bookingData: {
-    selectedPackage: string;
-    packageCost: string;
-    referenceNumber: string;
-  }
-  paymentStatus: string;
-  bookedDate: Date;
-}
+import { Reservation } from '@/helpers/interface';
 
 
-const page = () => {
+
+const Page = () => {
   
-  const [bookFlights, setBookFlights] = useState<BookFlights[]>([]);
+  const [bookFlights, setBookFlights] = useState<Reservation[]>([]);
   const [loading, setLoading] = useState(true)
   const Router = useRouter();
   const { id } = useParams();
@@ -147,4 +117,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page

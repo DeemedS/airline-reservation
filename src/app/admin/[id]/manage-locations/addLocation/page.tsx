@@ -13,7 +13,7 @@ interface Destination {
         City: string;
     }
 
-const page = () => {
+const Page = () => {
 
     const [saveLoading, setSaveLoading] = useState(false);
     const [deleteLoading, setDeleteLoading] = useState(false);
@@ -113,4 +113,4 @@ const page = () => {
     )                                    
 }
 
-export default page
+export default Page

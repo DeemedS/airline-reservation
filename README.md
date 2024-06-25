@@ -1,6 +1,6 @@
 ## AIRLINE RESERVATION NEXTJS APP 
 
-##view live at https://airline-reservation-three.vercel.app/
+## View live at https://airline-reservation-three.vercel.app/
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
